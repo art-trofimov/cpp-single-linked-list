@@ -212,15 +212,11 @@ public:
     void InitList(container & c , size_t size ){
         SingleLinkedList<Type> tmp;
         tmp.size_ = size;
-        auto it = c.begin();
         if (size != 0) {
-            Node* tmpNode = new Node (*it, nullptr);
-            tmp.head_.next_node = tmpNode;
-            for (++it; it != c.end(); ++it){
-                Node* tmpNode2 = new Node (*it, nullptr);
-                tmpNode->next_node = tmpNode2;
-                tmpNode = tmpNode2;
-            }
+            auto current_node = tmp.before_begin();
+            for (const auto& value : c) {
+                current_node = tmp.InsertAfter(current_node, value);
+            } 
             swap(tmp);
         } 
     }
@@ -324,7 +320,7 @@ void swap(SingleLinkedList<Type>& lhs, SingleLinkedList<Type>& rhs) noexcept {
 
 template <typename Type>
 bool operator==(const SingleLinkedList<Type>& lhs, const SingleLinkedList<Type>& rhs) {
-    if (lhs.size_ != rhs.size_) {
+    if (lhs.GetSize() != rhs.GetSize()) {
         return false;
     }
     return std::equal(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
